@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxi.star.jxserver.dao.TongzhanDao">
+
+    <select id = "listAllTongzhans" resultType="com.jinxi.star.jxserver.entity.Tongzhan">
+        select tongzhan_name tongzhanName
+        from linantongzhan
+        where is_delete = 0
+    </select>
+
+    <select id="getTongzhanContent" resultType="com.jinxi.star.jxserver.entity.Tongzhan">
+        select tongzhan_name tongZhanName, community_name communityName,img_id img
+        from linantongzhan,community
+        where tongzhan_id = #{tongZhanId} and linantongzhan.community_id  = community.community_id
+    </select>
+
+    <insert id="releaseTongzhan" >
+        insert into linantongzhan (tongzhan_name,community_id,img_id)
+        values (#{tongzhan.tongZhanName},#{tongzhan.communityId},#{tongzhan.img})
+    </insert>
+
+    <update id="deleteTongzhan">
+        update linantongzhan set is_delete = 1 where tongzhan_id = #{tongZhanId}
+    </update>
+
+</mapper>

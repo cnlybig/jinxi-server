@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxi.star.jxserver.dao.MinorityDao">
+
+    <select id = "listAllMinoritys" resultType="com.jinxi.star.jxserver.entity.Minority">
+        select minority_name minorityName
+        from minority
+        where is_delete = 0
+    </select>
+
+    <select id="getMinorityContent" resultType="com.jinxi.star.jxserver.entity.Minority">
+        select minority_name minorityName, community_name communityName,img_id img
+        from minority,community
+        where minority_id = #{minorityId} and minority.community_id  = community.community_id
+    </select>
+
+    <insert id="releaseMinority" >
+        insert into minority (minority_name,community_id,img_id)
+        values (#{minority.minorityName},#{minority.communityId},#{minority.img})
+    </insert>
+
+    <update id="deleteMinority">
+        update minority set is_delete = 1 where minority_id = #{minorityId}
+    </update>
+
+</mapper>

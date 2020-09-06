@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxi.star.jxserver.dao.BulletinDao">
+
+    <select id = "listAllBulletins" resultType="com.jinxi.star.jxserver.entity.Bulletin">
+        select bulletin_name bulletinName,pic_id picId
+        from bulletin
+        where is_delete = 0
+    </select>
+
+    <select id="getBulletinContent" resultType="com.jinxi.star.jxserver.entity.Bulletin">
+        select bulletin_name bulletinName, community_name communityName,img_id img
+        from bulletin
+        where bulletin_id = #{bulletinId}
+    </select>
+
+    <insert id="releaseBulletin" >
+        insert into bulletin (bulletin_name,community_name,img_id)
+        values (#{bulletin.bulletinName},#{bulletin.communityName},#{bulletin.img})
+    </insert>
+
+    <update id="deleteBulletin">
+        update bulletin set is_delete = 1 where bulletin_id = #{bulletinId}
+    </update>
+
+</mapper>

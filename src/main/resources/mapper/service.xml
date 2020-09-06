@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxi.star.jxserver.dao.ServiceDao">
+
+    <select id="listAllServices" resultType="com.jinxi.star.jxserver.entity.ServiceInfo">
+        select service_name serviceName, service_content serviceContent,unix_timestamp(service_publishtime) servicePublishTime
+        from service
+        where is_delete = 0
+    </select>
+
+    <select id="listAdminServices" resultType="com.jinxi.star.jxserver.entity.ServiceInfo">
+        select service_name serviceName, service_content serviceContent,unix_timestamp(service_publishtime) servicePublishTime
+        from service
+        where open_id = 001 and is_delete = 0
+    </select>
+
+    <select id="listFreeServices" resultType="com.jinxi.star.jxserver.entity.ServiceInfo">
+        select service_name serviceName, service_content serviceContent,unix_timestamp(service_publishtime) servicePublishTime
+        from service
+        where service_category = 0 and is_delete = 0
+    </select>
+
+    <select id="listPaidServices" resultType="com.jinxi.star.jxserver.entity.ServiceInfo">
+        select service_name serviceName, service_content serviceContent,unix_timestamp(service_publishtime) servicePublishTime
+        from service
+        where service_category = 1 and is_delete = 0
+    </select>
+
+    <select id="listMyServices" resultType="com.jinxi.star.jxserver.entity.ServiceInfo">
+        select service_name serviceName, service_content serviceContent,unix_timestamp(service_publishtime) servicePublishTime
+        from service
+        where open_id = #{openId} and is_delete = 0
+    </select>
+
+    <select id="getServiceContent" resultType="com.jinxi.star.jxserver.entity.ServiceInfo">
+        select service_name serviceName, service_content serviceContent,user_name offerName,unix_timestamp(service_publishtime) servicePublishTime,
+        service_price servicePrice, unix_timestamp(service_startime) serviceStarTime, unix_timestamp(service_endtime) serviceEndTime, business_license businessLicense
+        from service,user
+        where service_id = #{serviceId} and user.open_id = service.open_id
+    </select>
+
+    <insert id="placeOrder" >
+        insert into orderlist (service_id,open_id,is_complete,order_time)
+        values (#{orderInfo.serviceId},#{orderInfo.openId},#{orderInfo.isComplete},sysdate())
+    </insert>
+
+    <insert id="releaseService" >
+        insert into service (service_name, service_content, service_category, open_id, service_price, service_startime ,
+        service_endtime,service_publishtime )
+        values (#{serviceInfo.serviceName},#{serviceInfo.serviceContent},#{serviceInfo.serviceCategory},#{serviceInfo.openId},
+        #{serviceInfo.servicePrice},#{serviceInfo.serviceStarTime},#{serviceInfo.serviceEndTime},sysdate())
+    </insert>
+
+    <insert id="adminReleaseService" >
+        insert into service (service_name, service_content, service_category, open_id, service_price, service_startime ,
+        service_endtime,service_publishtime  )
+        values (#{serviceInfo.serviceName},#{serviceInfo.serviceContent},#{serviceInfo.serviceCategory},#{serviceInfo.openId},
+        #{serviceInfo.servicePrice},#{serviceInfo.serviceStarTime},#{serviceInfo.serviceEndTime},sysdate())
+    </insert>
+
+    <update id="deleteService" >
+        update from service
+        set is_delete = 1
+        where service_id = #{serviceId}
+    </update>
+
+    <update id="adminDeleteService" >
+        update from service
+        set is_delete = 1
+        where service_id = #{serviceId}
+    </update>
+
+</mapper>

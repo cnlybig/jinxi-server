@@ -1,0 +1,42 @@
+.mvn/
+target/
+logs/
+logs-dev/
+logs-test/
+cache-data/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### 前端 ###
+h5-web
+
+node_modules
+bs-config.js
+package.json
+
+gulpfile.js
+/HELP.md
+/.gitignore.bak
+/mvnw
+/mvnw.cmd

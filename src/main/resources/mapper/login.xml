@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxi.star.jxserver.dao.LoginDao">
+
+    <select id="getUserByOpenId" resultType="com.jinxi.star.jxserver.entity.LoginInfo">
+        select user_id userId,user_name userName
+        ,open_id openId,union_id unionId,phone,id_kind idKind,id_no idNo,last_login_time lastLoginTime
+        from user
+        where open_id = #{openId}
+    </select>
+
+    <select id="getUserByUserId" resultType="com.jinxi.star.jxserver.entity.LoginInfo">
+        select user_id userId,user_name userName
+        ,open_id openId,union_id unionId,phone,id_kind idKind,id_no idNo,last_login_time lastLoginTime
+        from user
+        where open_id = #{userId}
+    </select>
+
+    <update id="updateLoginTime">
+        update user set last_login_time = sysdate() where open_id = #{openId}
+    </update>
+
+    <insert id="register" useGeneratedKeys="true" keyProperty="user_id">
+        insert into user (user_name,open_id,union_id,phone,id_kind,id_no,last_login_time)
+        values (#{loginInfo.userName},#{loginInfo.openId},#{loginInfo.unionId},#{loginInfo.phone}
+        ,#{loginInfo.idKind},#{loginInfo.idNo},sysdate())
+    </insert>
+
+    <select id="listUsers" resultType="com.jinxi.star.jxserver.entity.LoginInfo">
+        select user_id userId, user_name userName
+        from user
+        where user_name like concat('%',#{userName},'%')
+    </select>
+</mapper>

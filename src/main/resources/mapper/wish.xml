@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxi.star.jxserver.dao.WishDao">
+
+
+    <update id="setWishGet">
+        update wish set is_complete = 1 where wish_id = #{wishId}
+    </update>
+
+    <insert id="claimWish" >
+        insert into wishlist (wish_id,open_id,get_time,is_complete)
+        values (#{wishListInfo.wishId},#{wishListInfo.openId},sysdate(),#{wishListInfo.isComplete})
+    </insert>
+
+    <update id="setWishDone">
+        update wish set is_complete = 2 where wish_id = #{wishId}
+    </update>
+    <update id="setWishListDone">
+        update wishlist set is_complete = 2 where wish_id = #{wishId}
+    </update>
+
+    <select id = "listAllWishs" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_name wishName, wish_content wishContent,unix_timestamp(wish_publish_time) wishPublishTime,
+        community_name communityName,is_complete isComplete
+        from wish,community
+        where is_delete = 0 and wish.community_id = community.community_id
+    </select>
+
+    <select id = "listCommunityWishs" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_name wishName, wish_content wishContent,unix_timestamp(wish_publish_time) wishPublishTime,
+        community_name communityName,is_complete isComplete
+        from wish,community
+        where community_id = #{communityId} and is_delete = 0 and wish.community_id = community.community_id
+    </select>
+
+    <select id = "listReceivedUnfinWishs" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_name wishName, wish_content wishContent,unix_timestamp(wish_publish_time) wishPublishTime,
+        community_name communityName,is_complete isComplete
+        from wish,community
+        where is_complete = 1 and is_delete = 0 and wish.community_id = community.community_id
+    </select>
+
+    <select id="listUnreceivedWishs" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_name wishName, wish_content wishContent,unix_timestamp(wish_publish_time) wishPublishTime,
+        community_name communityName,is_complete isComplete
+        from wish,community
+        where is_complete = 0 and is_delete = 0 and wish.community_id = community.community_id
+    </select>
+
+    <select id="listFinishedWishs" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_name wishName, wish_content wishContent,unix_timestamp(wish_publish_time) wishPublishTime,
+        community_name communityName,is_complete isComplete
+        from wish,community
+        where is_complete = 2 and is_delete = 0 and wish.community_id = community.community_id
+    </select>
+
+
+    <select id="getWish" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_id wishId,community_name communityName, wish_name wishName, wish_content wishContent, wish.open_id openId,
+        user_name recipientName,is_audit isAudit,is_complete isComplete,intergral intergral,unix_timestamp(wish_publish_time) wishPublishTime
+        from wish,user,community
+        where wish_id = #{wishId} and user.open_id = wish.open_id  and wish.community_id = community.community_id
+    </select>
+
+
+    <select id="listMyWishs" resultType="com.jinxi.star.jxserver.entity.WishInfo">
+        select wish_id wishId,wish_name wishName, wish_content wishContent,unix_timestamp(wish_publish_time) wishPublishTime,intergral intergral,
+        community_name communityName,open_id openId,is_complete isComplete
+        from wish,community
+        where open_id = #{openId} and is_delete = 0 and wish.community_id = community.community_id
+    </select>
+
+    <select id="listAllWishLists" resultType="com.jinxi.star.jxserver.entity.WishListInfo">
+        select wish_id wishId,open_id openId,is_complete isComplete,unix_timestamp(get_time) getTime
+        from wishlist
+    </select>
+
+    <select id="getWishList" resultType="com.jinxi.star.jxserver.entity.WishListInfo">
+        select wish_id wishId,open_id openId,is_complete isComplete,unix_timestamp(get_time) getTime
+        from wishlist
+        where wish_id = #{wishId}
+    </select>
+
+    <insert id="releaseWish" >
+        insert into wish (wish_name,open_id,wish_content,community_id,intergral,wish_publish_time)
+        values (#{wishInfo.wishName},#{wishInfo.openId},#{wishInfo.wishContent},#{wishInfo.communityId},#{wishInfo.intergral},sysdate())
+    </insert>
+
+    <update id="deleteWish">
+        update wish set is_delete = 1 where wish_id = #{wishId}
+    </update>
+
+</mapper>
